@@ -1,0 +1,26 @@
+.wearable-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.wearable-row:last-child { border-bottom: none; }
+.wearable-row .label { color: var(--text-2); }
+
+.gym-mini {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.gym-mini-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-0);
+  margin-bottom: 4px;
+}
+.gym-mini-addr {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}

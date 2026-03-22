@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: gympulse-api
+    runtime: docker
+    plan: free
+    envVars:
+      - key: MONGODB_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: GOOGLE_PLACES_API_KEY
+        sync: false
+
+  - type: web
+    name: gympulse-web
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    plan: free
