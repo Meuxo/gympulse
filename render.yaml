@@ -2,7 +2,7 @@ services:
   - type: web
     name: gympulse-api
     runtime: python
-    repo: https://github.com/YOUR_REPO  # will be updated
+    repo: https://github.com/Meuxo/gympulse
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     rootDir: backend
@@ -16,11 +16,14 @@ services:
       - key: GOOGLE_PLACES_API_KEY
         sync: false
       - key: PYTHON_VERSION
-        value: 3.13.0
+        value: "3.13.0"
+      - key: FRONTEND_URL
+        sync: false
     plan: free
   - type: web
     name: gympulse-web
     runtime: static
+    repo: https://github.com/Meuxo/gympulse
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     headers:
@@ -34,7 +37,4 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-    envVars:
-      - key: VITE_API_URL
-        sync: false
     plan: free

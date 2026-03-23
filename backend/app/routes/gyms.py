@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Body
 from datetime import datetime, timedelta
 from typing import Optional
 from bson import ObjectId
@@ -140,7 +140,7 @@ async def search_nearby_gyms(
 
 @router.post("/import-google")
 async def import_google_place(
-    place: dict,
+    place: dict = Body(...),
     current_user: dict = Depends(get_current_user),
 ):
     """Import a gym from Google Places search results into our database."""
