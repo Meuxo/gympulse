@@ -1,5 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import get_settings
+import certifi
 
 settings = get_settings()
 
@@ -10,7 +11,10 @@ db = None
 async def connect_db():
     """Connect to MongoDB and set up indexes."""
     global client, db
-    client = AsyncIOMotorClient(settings.MONGODB_URL)
+    client = AsyncIOMotorClient(
+        settings.MONGODB_URL,
+        tlsCAFile=certifi.where(),
+    )
     db = client[settings.MONGODB_DB_NAME]
 
     # Create indexes
