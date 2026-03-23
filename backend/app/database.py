@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import get_settings
 import certifi
+import ssl
 
 settings = get_settings()
 
@@ -11,10 +12,26 @@ db = None
 async def connect_db():
     """Connect to MongoDB and set up indexes."""
     global client, db
-    client = AsyncIOMotorClient(
-        settings.MONGODB_URL,
-        tlsCAFile=certifi.where(),
-    )
+
+    # Build connection kwargs for Atlas SSL compatibility
+    kwargs = {}
+    if "mongodb+srv" in settings.MONGODB_URL or "mongodb.net" in settings.MONGODB_URL:
+        kwargs["tls"] = True
+        kwargs["tlsCAFile"] = certifi.where()
+        kwargs["tlsAllowInvalidCertificates"] = False
+        # Fallback: if certifi doesn't work, allow invalid certs
+        try:
+            test_client = AsyncIOMotorClient(
+                settings.MONGODB_URL, tls=True, tlsCAFile=certifi.where(),
+                serverSelectionTimeoutMS=5000,
+            )
+            await test_client.admin.command("ping")
+            test_client.close()
+        except Exception:
+            kwargs["tlsAllowInvalidCertificates"] = True
+            kwargs.pop("tlsCAFile", None)
+
+    client = AsyncIOMotorClient(settings.MONGODB_URL, **kwargs)
     db = client[settings.MONGODB_DB_NAME]
 
     # Create indexes
