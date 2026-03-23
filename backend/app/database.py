@@ -1,5 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import get_settings
+import ssl
+import certifi
 
 settings = get_settings()
 
@@ -12,12 +14,20 @@ async def connect_db():
     global client, db
 
     url = settings.MONGODB_URL
-    # For Atlas (mongodb+srv), append tlsInsecure if not already present
-    if ("mongodb+srv" in url or "mongodb.net" in url) and "tls" not in url.lower():
-        sep = "&" if "?" in url else "?"
-        url = f"{url}{sep}tls=true&tlsAllowInvalidCertificates=true"
+    kwargs = {}
 
-    client = AsyncIOMotorClient(url)
+    # For Atlas connections, configure SSL properly
+    if "mongodb+srv" in url or "mongodb.net" in url:
+        # Create permissive SSL context for compatibility with Atlas
+        ctx = ssl.create_default_context(cafile=certifi.where())
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        # Lower security level to allow more cipher suites (fixes Python 3.13 + OpenSSL 3.x)
+        ctx.set_ciphers("DEFAULT:@SECLEVEL=1")
+        kwargs["tls"] = True
+        kwargs["tlsAllowInvalidCertificates"] = True
+
+    client = AsyncIOMotorClient(url, **kwargs)
     db = client[settings.MONGODB_DB_NAME]
 
     # Create indexes
