@@ -7,9 +7,9 @@ import ErrorState from '../components/common/ErrorState'
 const tooltipStyle = { background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: '0.8rem' }
 
 const PROVIDERS = [
-  { id: 'fitbit', name: 'Fitbit', desc: 'Sync via OAuth2', badge: 'badge-green' },
-  { id: 'apple_health', name: 'Apple Health', desc: 'iOS companion app', badge: 'badge-blue' },
-  { id: 'samsung_health', name: 'Samsung Health', desc: 'Android companion app', badge: 'badge-yellow' },
+  { id: 'fitbit', name: 'Fitbit', desc: 'Sync via OAuth2 — connect your Fitbit account', badge: 'badge-green', web: true },
+  { id: 'apple_health', name: 'Apple Health', desc: 'Available on the GymPulse mobile app (iOS)', badge: 'badge-blue', web: false },
+  { id: 'samsung_health', name: 'Samsung Health', desc: 'Available on the GymPulse mobile app (Android)', badge: 'badge-yellow', web: false },
 ]
 
 export default function WearablesPage() {
@@ -87,19 +87,29 @@ export default function WearablesPage() {
             <div key={p.id} className="card">
               <div className="flex-between mb-xs">
                 <span className="font-semibold">{p.name}</span>
-                <span className={`badge ${connected ? 'badge-green' : p.badge}`}>
-                  {connected ? 'Connected' : 'Available'}
-                </span>
-              </div>
-              <p className="text-xs text-2 mb-sm">{p.desc}</p>
-              <div className="flex gap-xs">
-                <button className="btn btn-ghost btn-sm" onClick={() => handleConnect(p.id)}>
-                  {connected ? 'Reconnect' : 'Connect'}
-                </button>
-                {connected && p.id === 'fitbit' && (
-                  <button className="btn btn-soft btn-sm" onClick={handleFitbitSync}>Sync now</button>
+                {p.web ? (
+                  <span className={`badge ${connected ? 'badge-green' : p.badge}`}>
+                    {connected ? 'Connected' : 'Available'}
+                  </span>
+                ) : (
+                  <span className="text-xs text-3">Mobile only</span>
                 )}
               </div>
+              <p className="text-xs text-2 mb-sm">{p.desc}</p>
+              {p.web ? (
+                <div className="flex gap-xs">
+                  <button className="btn btn-ghost btn-sm" onClick={() => handleConnect(p.id)}>
+                    {connected ? 'Reconnect' : 'Connect'}
+                  </button>
+                  {connected && p.id === 'fitbit' && (
+                    <button className="btn btn-soft btn-sm" onClick={handleFitbitSync}>Sync now</button>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-3" style={{ fontStyle: 'italic' }}>
+                  Integration available in the mobile application
+                </p>
+              )}
             </div>
           )
         })}

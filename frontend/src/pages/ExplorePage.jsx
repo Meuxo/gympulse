@@ -41,7 +41,8 @@ export default function ExplorePage() {
       })
       setResults(res.data.results || [])
     } catch (err) {
-      setError(err.response?.data?.detail || 'Search failed')
+      const detail = err.response?.data?.detail
+      setError(typeof detail === 'string' ? detail : 'Search failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -154,7 +155,7 @@ export default function ExplorePage() {
       )}
 
       {loading && <LoadingSpinner />}
-      {error && <div className="error-state mb-md">{error}</div>}
+      {error && <p className="text-sm mb-md" style={{ color: 'var(--red)' }}>{String(error)}</p>}
 
       {/* Results grid */}
       {!loading && results.length > 0 && (
