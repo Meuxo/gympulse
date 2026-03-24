@@ -51,7 +51,7 @@ export default function GymsPage() {
 
       {showAdd && (
         <form onSubmit={handleAddGym} className="card mb-lg">
-          <div className="card-title">Add Gym</div>
+          <div className="card-title">Add gym</div>
           <div className="grid grid-3 gap-sm" style={{ alignItems: 'end' }}>
             <div className="form-group" style={{ margin: 0 }}>
               <label>Name</label>
@@ -88,31 +88,20 @@ export default function GymsPage() {
           {gyms.map((gym) => (
             <Link to={`/gyms/${gym.id}`} key={gym.id} className="card card-interactive" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="flex-between mb-xs">
-                <span className="font-semibold" style={{ fontSize: '0.95rem' }}>{gym.name}</span>
-                <span className="badge badge-blue">{gym.gym_type.replace('_', ' ')}</span>
+                <span className="font-semibold" style={{ fontSize: '0.92rem' }}>{gym.name}</span>
+                <span className="text-xs text-2">{gym.gym_type.replace('_', ' ')}</span>
               </div>
-              <div className="text-xs text-3 mb-sm">{gym.address || 'No address'}</div>
+              {gym.address && <div className="text-xs text-3 mb-sm">{gym.address}</div>}
               <div className="flex-between">
                 {gym.current_busy_level ? (
-                  <div className="flex gap-xs" style={{ alignItems: 'center' }}>
-                    <BusyLevelBadge level={gym.current_busy_level} label={gym.busy_level_label} />
-                    {gym.data_source === 'google' && <span className="text-xs" style={{ color: 'var(--accent)' }}>Google</span>}
-                  </div>
+                  <BusyLevelBadge level={gym.current_busy_level} label={gym.busy_level_label} />
                 ) : (
                   <span className="text-xs text-3">No recent reports</span>
                 )}
                 <span className="text-xs text-3">
-                  {gym.google_rating ? `★ ${gym.google_rating}` : `${gym.recent_reports_count} reports`}
+                  {gym.google_rating ? `${gym.google_rating} stars` : ''}
                 </span>
               </div>
-              {gym.amenities?.length > 0 && (
-                <div className="flex gap-xs flex-wrap mt-sm">
-                  {gym.amenities.slice(0, 4).map((a) => (
-                    <span key={a} style={{ fontSize: '0.65rem', color: 'var(--text-3)', background: 'var(--bg-3)', padding: '2px 7px', borderRadius: 100 }}>{a}</span>
-                  ))}
-                  {gym.amenities.length > 4 && <span style={{ fontSize: '0.65rem', color: 'var(--text-3)' }}>+{gym.amenities.length - 4}</span>}
-                </div>
-              )}
             </Link>
           ))}
         </div>

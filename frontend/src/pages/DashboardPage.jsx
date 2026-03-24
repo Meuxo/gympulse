@@ -7,7 +7,7 @@ import ErrorState from '../components/common/ErrorState'
 import BusyLevelBadge from '../components/common/BusyLevelBadge'
 import './DashboardPage.css'
 
-const tooltipStyle = { background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: '0.8rem' }
+const tooltipStyle = { background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 6, fontSize: '0.8rem' }
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState(null)
@@ -55,41 +55,43 @@ export default function DashboardPage() {
         <p className="page-subtitle">{new Date().toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
       </div>
 
-      <div className="grid grid-4 mb-lg">
-        <div className="card stat-card">
-          <div className="stat-label">Workouts Today</div>
-          <div className="stat-value">{wd.count || 0}</div>
+      {/* Stats row - mixed layout, not all boxed */}
+      <div className="dash-stats">
+        <div className="dash-stat-main card">
+          <div className="stat-value" style={{ fontSize: '2rem' }}>{wd.count || 0}</div>
+          <div className="stat-label">workouts today</div>
         </div>
-        <div className="card stat-card">
-          <div className="stat-label">Calories</div>
-          <div className="stat-value">{Math.round(w.calories_burned || wd.total_calories || 0).toLocaleString()}</div>
-          <div className="stat-unit">kcal</div>
-        </div>
-        <div className="card stat-card">
-          <div className="stat-label">Steps</div>
-          <div className="stat-value">{(w.steps || 0).toLocaleString()}</div>
-        </div>
-        <div className="card stat-card">
-          <div className="stat-label">Active Min</div>
-          <div className="stat-value">{Math.round(w.active_minutes || 0)}</div>
+        <div className="dash-stat-group">
+          <div className="dash-stat-line">
+            <span className="dash-stat-num">{Math.round(w.calories_burned || wd.total_calories || 0).toLocaleString()}</span>
+            <span className="dash-stat-unit">kcal burned</span>
+          </div>
+          <div className="dash-stat-line">
+            <span className="dash-stat-num">{(w.steps || 0).toLocaleString()}</span>
+            <span className="dash-stat-unit">steps</span>
+          </div>
+          <div className="dash-stat-line">
+            <span className="dash-stat-num">{Math.round(w.active_minutes || 0)}</span>
+            <span className="dash-stat-unit">active min</span>
+          </div>
         </div>
       </div>
 
       <div className="grid grid-2 mb-lg">
         <div className="card">
-          <div className="card-title">Weekly Calories</div>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={weeklyWorkouts} barSize={20}>
+          <div className="card-title">Weekly calories</div>
+          <ResponsiveContainer width="100%" height={170}>
+            <BarChart data={weeklyWorkouts} barSize={18}>
               <XAxis dataKey="day" stroke="var(--text-3)" fontSize={11} tickLine={false} axisLine={false} />
-              <YAxis stroke="var(--text-3)" fontSize={11} tickLine={false} axisLine={false} width={35} />
+              <YAxis stroke="var(--text-3)" fontSize={11} tickLine={false} axisLine={false} width={32} />
               <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(255,255,255,.03)' }} />
-              <Bar dataKey="calories" fill="var(--primary)" radius={[4, 4, 0, 0]} name="Calories" />
+              <Bar dataKey="calories" fill="var(--primary)" radius={[3, 3, 0, 0]} name="Calories" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="card">
-          <div className="card-title">Wearable Summary</div>
+          <div className="card-title">Wearable data</div>
           <div>
             {[
               ['Heart Rate', w.heart_rate_avg ? `${w.heart_rate_avg} bpm` : '--'],
@@ -109,8 +111,8 @@ export default function DashboardPage() {
 
       {summary?.gyms?.length > 0 && (
         <div className="card mb-lg">
-          <div className="flex-between mb-md">
-            <div className="card-title" style={{ margin: 0 }}>Saved Gyms</div>
+          <div className="flex-between mb-sm">
+            <div className="card-title" style={{ margin: 0 }}>Saved gyms</div>
             <Link to="/gyms" className="btn btn-ghost btn-sm">All gyms</Link>
           </div>
           <div className="grid grid-3">
@@ -123,7 +125,6 @@ export default function DashboardPage() {
                   ) : (
                     <span className="text-xs text-3">No reports</span>
                   )}
-                  <span className="text-xs text-3">{gym.recent_reports_count} reports</span>
                 </div>
               </Link>
             ))}
@@ -133,18 +134,15 @@ export default function DashboardPage() {
 
       {summary?.basketball?.length > 0 && (
         <div className="card">
-          <div className="flex-between mb-md">
-            <div className="card-title" style={{ margin: 0 }}>Basketball Courts</div>
+          <div className="flex-between mb-sm">
+            <div className="card-title" style={{ margin: 0 }}>Basketball courts</div>
             <Link to="/basketball" className="btn btn-ghost btn-sm">All courts</Link>
           </div>
           <div className="grid grid-3">
             {summary.basketball.map((c) => (
               <div key={c.gym_id} className="card card-interactive">
                 <div className="gym-mini-name">{c.name}</div>
-                <div className="flex-between mt-xs">
-                  <span className="badge badge-green">~{c.avg_player_count} players</span>
-                  <span className="text-xs text-3">{c.reports_count} reports</span>
-                </div>
+                <div className="text-xs text-2 mt-xs">~{c.avg_player_count} players avg</div>
               </div>
             ))}
           </div>

@@ -69,7 +69,7 @@ export default function BasketballPage() {
 
       <div className="grid grid-2">
         <div>
-          <div className="card-title mb-sm">Courts</div>
+          <div className="text-xs text-2 mb-sm">{courts.length} court{courts.length !== 1 ? 's' : ''}</div>
           <div className="grid gap-sm">
             {courts.map((c) => (
               <button
@@ -81,15 +81,17 @@ export default function BasketballPage() {
                 }}
                 onClick={() => selectCourt(c)}
               >
-                <div className="font-semibold" style={{ fontSize: '0.9rem' }}>{c.name}</div>
-                <div className="text-xs text-3">{c.address || 'No address'}</div>
+                <div className="font-semibold" style={{ fontSize: '0.88rem' }}>{c.name}</div>
+                {c.address && <div className="text-xs text-3">{c.address}</div>}
                 <div className="flex-between mt-sm">
                   {c.avg_player_count != null ? (
-                    <span className="badge badge-green">~{c.avg_player_count} players</span>
+                    <span className="text-xs text-2">~{c.avg_player_count} players</span>
                   ) : (
                     <span className="text-xs text-3">No reports</span>
                   )}
-                  <span className="text-xs text-3">{c.recent_reports_count} reports</span>
+                  {c.recent_reports_count > 0 && (
+                    <span className="text-xs text-3">{c.recent_reports_count} reports</span>
+                  )}
                 </div>
               </button>
             ))}
@@ -100,13 +102,12 @@ export default function BasketballPage() {
           {selected ? (
             <>
               <div className="flex-between mb-sm">
-                <div className="card-title" style={{ margin: 0 }}>{selected.name}</div>
+                <span className="font-semibold">{selected.name}</span>
                 <button className="btn btn-soft btn-sm" onClick={() => setShowForm(!showForm)}>
                   {showForm ? 'Cancel' : 'Report'}
                 </button>
               </div>
 
-              {/* Popular Times for court */}
               <div className="mb-md">
                 <PopularTimes gymId={selected.id} />
               </div>
@@ -132,20 +133,20 @@ export default function BasketballPage() {
               )}
 
               <div className="card">
-                <div className="card-title">Recent Reports</div>
+                <div className="card-title">Recent reports</div>
                 {reports.length === 0 ? (
                   <p className="text-sm text-2">No recent reports</p>
                 ) : reports.map((r) => (
-                  <div key={r.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+                  <div key={r.id} style={{ padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
                     <div className="flex-between">
                       <span>
                         <span className="font-semibold">{r.player_count} players</span>
-                        <span className="text-xs text-2" style={{ marginLeft: 8 }}>{r.user_display_name}</span>
+                        <span className="text-xs text-2" style={{ marginLeft: 6 }}>{r.user_display_name}</span>
                       </span>
                       <span className="text-xs text-3">{new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     {r.notes && <p className="text-xs text-2 mt-xs">{r.notes}</p>}
-                    {r.photo_url && <img src={r.photo_url} alt="Court" style={{ maxWidth: '100%', borderRadius: 8, marginTop: 8, maxHeight: 180, objectFit: 'cover' }} />}
+                    {r.photo_url && <img src={r.photo_url} alt="Court" style={{ maxWidth: '100%', borderRadius: 6, marginTop: 6, maxHeight: 160, objectFit: 'cover' }} />}
                   </div>
                 ))}
               </div>

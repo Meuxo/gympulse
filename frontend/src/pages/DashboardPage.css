@@ -1,9 +1,46 @@
+.dash-stats {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 22px;
+}
+.dash-stat-main {
+  flex: 0 0 auto;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 24px;
+}
+.dash-stat-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.dash-stat-line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.dash-stat-num {
+  font-size: 1.15rem;
+  font-weight: 650;
+  color: var(--text-0);
+}
+.dash-stat-unit {
+  font-size: 0.78rem;
+  color: var(--text-2);
+}
+
 .wearable-row {
   display: flex;
   justify-content: space-between;
-  padding: 9px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
 }
 .wearable-row:last-child { border-bottom: none; }
 .wearable-row .label { color: var(--text-2); }
@@ -15,7 +52,7 @@
 }
 .gym-mini-name {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-0);
   margin-bottom: 4px;
 }
@@ -23,4 +60,11 @@
   font-size: 0.75rem;
   color: var(--text-3);
   margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .dash-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
 }

@@ -30,7 +30,7 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-logo">Gym<span>Pulse</span></div>
+        <div className="auth-logo">GymPulse</div>
         <p className="auth-subtitle">Create your account</p>
         {error && <div className="error-state mb-md">{error}</div>}
         <form onSubmit={handleSubmit}>

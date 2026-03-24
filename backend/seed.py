@@ -1,5 +1,5 @@
 """
-Seed script — populates GymPulse with real gyms, basketball courts,
+Seed script — populates GymPulse with real Minnesota gyms, basketball courts,
 sample workouts, wearable data, crowd reports, and popular times.
 Run: python seed.py
 """
@@ -106,73 +106,221 @@ def generate_popular_times(gym_type: str) -> list[dict]:
 
 
 # ======================================================
-# REAL GYM DATA
+# MINNESOTA GYMS & BASKETBALL COURTS
 # ======================================================
 
 REAL_GYMS = [
-    # --- Major gym chains ---
-    {"name": "Planet Fitness - Times Square", "address": "333 W 42nd St, New York, NY 10036", "lat": 40.7577, "lng": -73.9918, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "tanning", "massage chairs", "hydromassage"]},
-    {"name": "Planet Fitness - Downtown Brooklyn", "address": "525 Fulton St, Brooklyn, NY 11201", "lat": 40.6872, "lng": -73.9836, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
-    {"name": "Equinox Hudson Yards", "address": "35 Hudson Yards, New York, NY 10001", "lat": 40.7539, "lng": -74.0014, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "sauna", "spa", "classes", "personal training"]},
-    {"name": "Equinox Flatiron", "address": "897 Broadway, New York, NY 10003", "lat": 40.7389, "lng": -73.9901, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "sauna", "spa", "classes"]},
-    {"name": "Crunch Fitness - 34th Street", "address": "404 W 34th St, New York, NY 10001", "lat": 40.7524, "lng": -73.9956, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "classes", "personal training", "sauna"]},
-    {"name": "Crunch Fitness - Bushwick", "address": "1500 Broadway, Brooklyn, NY 11207", "lat": 40.6888, "lng": -73.9131, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "classes", "personal training"]},
-    {"name": "LA Fitness - Garden City", "address": "987 Stewart Ave, Garden City, NY 11530", "lat": 40.7262, "lng": -73.6341, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "basketball", "racquetball", "sauna"]},
-    {"name": "24 Hour Fitness - Downtown LA", "address": "735 S Figueroa St, Los Angeles, CA 90017", "lat": 34.0476, "lng": -118.2599, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "sauna", "basketball", "classes"]},
-    {"name": "24 Hour Fitness - San Francisco", "address": "350 Bay St, San Francisco, CA 94133", "lat": 37.8060, "lng": -122.4142, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "sauna", "classes"]},
-    {"name": "Gold's Gym - Venice Beach", "address": "360 Hampton Dr, Venice, CA 90291", "lat": 33.9925, "lng": -118.4714, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "outdoor area", "classes", "personal training"]},
-    {"name": "Gold's Gym - Arlington", "address": "4301 S Fairfax Dr, Arlington, VA 22203", "lat": 38.8535, "lng": -77.1015, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "pool", "classes", "personal training"]},
-    {"name": "YMCA - Vanderbilt", "address": "224 E 47th St, New York, NY 10017", "lat": 40.7539, "lng": -73.9725, "gym_type": "both",
-     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "track"]},
-    {"name": "YMCA - Bedford-Stuyvesant", "address": "1121 Bedford Ave, Brooklyn, NY 11216", "lat": 40.6870, "lng": -73.9533, "gym_type": "both",
-     "amenities": ["weights", "cardio", "basketball", "pool", "classes"]},
-    {"name": "Life Time Fitness - Chestnut Hill", "address": "300 Boylston St, Chestnut Hill, MA 02467", "lat": 42.3221, "lng": -71.1671, "gym_type": "gym",
+    # --- Life Time Fitness ---
+    {"name": "Life Time - Eagan", "address": "1565 Thomas Center Dr, Eagan, MN 55122", "lat": 44.8041, "lng": -93.1674, "gym_type": "gym",
      "amenities": ["weights", "cardio", "pool", "basketball", "rock climbing", "spa", "cafe"]},
-    {"name": "Orangetheory Fitness - Chelsea", "address": "148 W 23rd St, New York, NY 10011", "lat": 40.7435, "lng": -73.9966, "gym_type": "gym",
-     "amenities": ["cardio", "HIIT", "heart rate monitoring", "classes"]},
-    {"name": "CrossFit Solace", "address": "38 W 14th St, New York, NY 10011", "lat": 40.7367, "lng": -73.9963, "gym_type": "gym",
-     "amenities": ["crossfit", "weightlifting", "classes", "open gym"]},
-    {"name": "Blink Fitness - Flatbush", "address": "2148 Nostrand Ave, Brooklyn, NY 11210", "lat": 40.6310, "lng": -73.9466, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "clean locker rooms"]},
-    {"name": "Blink Fitness - 125th Street", "address": "301 W 125th St, New York, NY 10027", "lat": 40.8092, "lng": -73.9549, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "clean locker rooms"]},
-    {"name": "Anytime Fitness - Astoria", "address": "31-11 Broadway, Astoria, NY 11106", "lat": 40.7629, "lng": -73.9247, "gym_type": "gym",
-     "amenities": ["weights", "cardio", "24/7 access", "personal training"]},
-    {"name": "Chelsea Piers Fitness", "address": "62 Chelsea Piers, New York, NY 10011", "lat": 40.7471, "lng": -74.0087, "gym_type": "both",
-     "amenities": ["weights", "cardio", "pool", "basketball", "rock climbing", "boxing", "track"]},
+    {"name": "Life Time - Plymouth", "address": "18500 Hwy 55, Plymouth, MN 55446", "lat": 45.0234, "lng": -93.4455, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa", "classes", "cafe", "rock climbing"]},
+    {"name": "Life Time - Woodbury", "address": "750 Globe Dr, Woodbury, MN 55125", "lat": 44.9105, "lng": -92.9239, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa", "classes", "cafe"]},
+    {"name": "Life Time - Target Center", "address": "600 1st Ave N, Minneapolis, MN 55403", "lat": 44.9795, "lng": -93.2760, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "spa", "classes"]},
+    {"name": "Life Time - Bloomington South", "address": "8501 Hudson Rd, Bloomington, MN 55437", "lat": 44.8312, "lng": -93.3139, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa", "rock climbing"]},
+    {"name": "Life Time - Lakeville", "address": "21125 Icenic Trail, Lakeville, MN 55044", "lat": 44.6497, "lng": -93.2428, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa", "cafe"]},
+    {"name": "Life Time - St. Louis Park", "address": "5525 Cedar Lake Rd, St. Louis Park, MN 55416", "lat": 44.9603, "lng": -93.3497, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "spa", "classes"]},
+    {"name": "Life Time - Fridley", "address": "7007 University Ave NE, Fridley, MN 55432", "lat": 45.0869, "lng": -93.2571, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa"]},
+    {"name": "Life Time - Savage", "address": "7600 W 131st St, Savage, MN 55378", "lat": 44.7293, "lng": -93.3697, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "rock climbing"]},
+    {"name": "Life Time - Maple Grove", "address": "17690 Elm Creek Blvd, Maple Grove, MN 55311", "lat": 45.1102, "lng": -93.4566, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "spa", "cafe"]},
 
-    # --- Basketball courts ---
-    {"name": "Rucker Park", "address": "155th St & Frederick Douglass Blvd, New York, NY 10039", "lat": 40.8293, "lng": -73.9367, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "bleachers", "lights", "legendary pickup games"]},
-    {"name": "The Cage - West 4th Street Courts", "address": "181 W 4th St, New York, NY 10014", "lat": 40.7324, "lng": -74.0002, "gym_type": "basketball_court",
-     "amenities": ["outdoor court", "lights", "famous pickup games"]},
-    {"name": "Brooklyn Bridge Park - Pier 2", "address": "Pier 2, Brooklyn Bridge Park, Brooklyn, NY 11201", "lat": 40.6963, "lng": -73.9976, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "waterfront", "lights", "5 full courts"]},
-    {"name": "Venice Beach Basketball Courts", "address": "1800 Ocean Front Walk, Venice, CA 90291", "lat": 33.9850, "lng": -118.4730, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "beach", "pickup games", "lights"]},
-    {"name": "Lincoln Park Courts", "address": "2045 N Lincoln Park W, Chicago, IL 60614", "lat": 41.9200, "lng": -87.6355, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "lights", "park setting"]},
-    {"name": "Hoop Heaven - Kearny", "address": "131 Passaic Ave, Kearny, NJ 07032", "lat": 40.7535, "lng": -74.1210, "gym_type": "basketball_court",
-     "amenities": ["indoor courts", "leagues", "open gym", "training"]},
-    {"name": "Dyckman Park Basketball Courts", "address": "Nagle Ave & Academy St, New York, NY 10034", "lat": 40.8645, "lng": -73.9269, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "tournament site", "lights", "bleachers"]},
-    {"name": "Cromwell Park Courts", "address": "5801 Cromwell Dr, Capitol Heights, MD 20743", "lat": 38.8869, "lng": -76.8958, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "lights", "parking"]},
-    {"name": "Geraldine Ferraro Park Courts", "address": "30-60 21st St, Astoria, NY 11102", "lat": 40.7710, "lng": -73.9237, "gym_type": "basketball_court",
-     "amenities": ["outdoor courts", "lights", "park setting"]},
-    {"name": "LA Fitness Basketball - Rego Park", "address": "9702 Queens Blvd, Rego Park, NY 11374", "lat": 40.7280, "lng": -73.8590, "gym_type": "both",
-     "amenities": ["indoor basketball", "weights", "cardio", "pool"]},
+    # --- Anytime Fitness ---
+    {"name": "Anytime Fitness - Uptown", "address": "3418 W Lake St, Minneapolis, MN 55416", "lat": 44.9487, "lng": -93.3110, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - NE Minneapolis", "address": "2706 NE Johnson St, Minneapolis, MN 55418", "lat": 45.0047, "lng": -93.2470, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Roseville", "address": "1767 Lexington Ave N, Roseville, MN 55113", "lat": 45.0153, "lng": -93.1784, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Burnsville", "address": "401 E Travelers Trail, Burnsville, MN 55337", "lat": 44.7641, "lng": -93.2710, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Eden Prairie", "address": "8088 Mitchell Rd, Eden Prairie, MN 55344", "lat": 44.8547, "lng": -93.4564, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Shakopee", "address": "1107 Vierling Dr E, Shakopee, MN 55379", "lat": 44.7736, "lng": -93.5164, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Coon Rapids", "address": "3460 129th Ave NW, Coon Rapids, MN 55448", "lat": 45.1583, "lng": -93.3536, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Mankato", "address": "1850 Adams St, Mankato, MN 56001", "lat": 44.1712, "lng": -94.0031, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Rochester", "address": "1340 Salem Rd SW, Rochester, MN 55902", "lat": 44.0074, "lng": -92.4909, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - Duluth", "address": "1301 Miller Trunk Hwy, Duluth, MN 55811", "lat": 46.8168, "lng": -92.1367, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Anytime Fitness - St. Cloud", "address": "4101 W Division St, St. Cloud, MN 56301", "lat": 45.5474, "lng": -94.2229, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+
+    # --- Planet Fitness ---
+    {"name": "Planet Fitness - Bloomington", "address": "408 S Ave, Bloomington, MN 55425", "lat": 44.8557, "lng": -93.2422, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Brooklyn Park", "address": "7849 Brooklyn Blvd, Brooklyn Park, MN 55445", "lat": 45.0983, "lng": -93.3581, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Richfield", "address": "1612 E 66th St, Richfield, MN 55423", "lat": 44.8770, "lng": -93.2540, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Maplewood", "address": "3001 White Bear Ave N, Maplewood, MN 55109", "lat": 44.9862, "lng": -93.0170, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Minnetonka", "address": "13700 Wayzata Blvd, Minnetonka, MN 55305", "lat": 44.9693, "lng": -93.4688, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Woodbury", "address": "1845 Woodlane Dr, Woodbury, MN 55125", "lat": 44.9249, "lng": -92.9109, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Apple Valley", "address": "15050 Cedar Ave S, Apple Valley, MN 55124", "lat": 44.7302, "lng": -93.2177, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Rochester", "address": "1201 S Broadway, Rochester, MN 55904", "lat": 44.0103, "lng": -92.4650, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+    {"name": "Planet Fitness - Duluth", "address": "1600 Miller Trunk Hwy, Duluth, MN 55811", "lat": 46.8188, "lng": -92.1412, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "tanning", "hydromassage"]},
+
+    # --- YMCA / YWCA ---
+    {"name": "YWCA Uptown", "address": "2121 E Lake St, Minneapolis, MN 55407", "lat": 44.9488, "lng": -93.2467, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "track", "childcare"]},
+    {"name": "YMCA Downtown Minneapolis", "address": "30 S 9th St, Minneapolis, MN 55402", "lat": 44.9764, "lng": -93.2735, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "track"]},
+    {"name": "YMCA Midway", "address": "1761 University Ave W, St. Paul, MN 55104", "lat": 44.9555, "lng": -93.1720, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "childcare"]},
+    {"name": "YMCA White Bear Lake", "address": "2100 Orchard Ln, White Bear Lake, MN 55110", "lat": 45.0662, "lng": -93.0197, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+    {"name": "YMCA Southdale", "address": "7355 York Ave S, Edina, MN 55435", "lat": 44.8788, "lng": -93.3303, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "childcare"]},
+    {"name": "YMCA Blaisdell", "address": "3335 Blaisdell Ave, Minneapolis, MN 55408", "lat": 44.9398, "lng": -93.2789, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+    {"name": "YMCA Burnsville", "address": "200 W Burnsville Pkwy, Burnsville, MN 55337", "lat": 44.7672, "lng": -93.2784, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes", "childcare"]},
+    {"name": "YMCA Elk River", "address": "711 Main St, Elk River, MN 55330", "lat": 45.3036, "lng": -93.5672, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+    {"name": "YMCA Rochester", "address": "709 1st Ave SW, Rochester, MN 55902", "lat": 44.0191, "lng": -92.4741, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+
+    # --- The Firm ---
+    {"name": "The Firm", "address": "1101 LaSalle Ave, Minneapolis, MN 55403", "lat": 44.9720, "lng": -93.2772, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "classes", "sauna"]},
+
+    # --- Snap Fitness ---
+    {"name": "Snap Fitness - St. Louis Park", "address": "5500 Excelsior Blvd, St. Louis Park, MN 55416", "lat": 44.9373, "lng": -93.3481, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Snap Fitness - Maple Grove", "address": "11298 Fountains Dr, Maple Grove, MN 55369", "lat": 45.1057, "lng": -93.4640, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Snap Fitness - Hastings", "address": "1170 Frontage Rd, Hastings, MN 55033", "lat": 44.7378, "lng": -92.8612, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Snap Fitness - Prior Lake", "address": "16389 Duluth Ave SE, Prior Lake, MN 55372", "lat": 44.7133, "lng": -93.4222, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+    {"name": "Snap Fitness - Chanhassen", "address": "530 W 78th St, Chanhassen, MN 55317", "lat": 44.8612, "lng": -93.5308, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "24/7 access"]},
+
+    # --- CorePower Yoga ---
+    {"name": "CorePower Yoga - Uptown", "address": "3003 Lyndale Ave S, Minneapolis, MN 55408", "lat": 44.9484, "lng": -93.2882, "gym_type": "gym",
+     "amenities": ["yoga", "heated classes", "sculpt"]},
+    {"name": "CorePower Yoga - North Loop", "address": "212 N 2nd St, Minneapolis, MN 55401", "lat": 44.9849, "lng": -93.2710, "gym_type": "gym",
+     "amenities": ["yoga", "heated classes", "sculpt"]},
+    {"name": "CorePower Yoga - Edina", "address": "3943 W 50th St, Edina, MN 55424", "lat": 44.9132, "lng": -93.3346, "gym_type": "gym",
+     "amenities": ["yoga", "heated classes", "sculpt"]},
+    {"name": "CorePower Yoga - St. Paul", "address": "867 Grand Ave, St. Paul, MN 55105", "lat": 44.9400, "lng": -93.1263, "gym_type": "gym",
+     "amenities": ["yoga", "heated classes", "sculpt"]},
+
+    # --- Orangetheory Fitness ---
+    {"name": "Orangetheory - Edina", "address": "3916 W 50th St, Edina, MN 55424", "lat": 44.9130, "lng": -93.3334, "gym_type": "gym",
+     "amenities": ["HIIT", "heart rate monitoring", "classes"]},
+    {"name": "Orangetheory - Minnetonka", "address": "11209 Highway 7, Minnetonka, MN 55305", "lat": 44.9384, "lng": -93.4691, "gym_type": "gym",
+     "amenities": ["HIIT", "heart rate monitoring", "classes"]},
+    {"name": "Orangetheory - Woodbury", "address": "9060 Hudson Rd, Woodbury, MN 55125", "lat": 44.9172, "lng": -92.9066, "gym_type": "gym",
+     "amenities": ["HIIT", "heart rate monitoring", "classes"]},
+    {"name": "Orangetheory - Maple Grove", "address": "7876 Main St N, Maple Grove, MN 55369", "lat": 45.0843, "lng": -93.4447, "gym_type": "gym",
+     "amenities": ["HIIT", "heart rate monitoring", "classes"]},
+
+    # --- CrossFit ---
+    {"name": "CrossFit Minneapolis", "address": "411 Main St NE, Minneapolis, MN 55413", "lat": 44.9936, "lng": -93.2578, "gym_type": "gym",
+     "amenities": ["crossfit", "weightlifting", "classes", "open gym"]},
+    {"name": "CrossFit St. Paul", "address": "671 Vandalia St, St. Paul, MN 55114", "lat": 44.9651, "lng": -93.1955, "gym_type": "gym",
+     "amenities": ["crossfit", "weightlifting", "classes", "open gym"]},
+    {"name": "CrossFit Edina", "address": "5000 W 36th St, St. Louis Park, MN 55416", "lat": 44.9322, "lng": -93.3450, "gym_type": "gym",
+     "amenities": ["crossfit", "weightlifting", "classes"]},
+
+    # --- University / College ---
+    {"name": "U of M Recreation Center", "address": "1906 University Ave SE, Minneapolis, MN 55455", "lat": 44.9738, "lng": -93.2322, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "rock climbing", "track"]},
+    {"name": "St. Thomas Recreation Center", "address": "2115 Summit Ave, St. Paul, MN 55105", "lat": 44.9400, "lng": -93.1912, "gym_type": "both",
+     "amenities": ["weights", "cardio", "pool", "basketball", "track"]},
+
+    # --- LA Fitness ---
+    {"name": "LA Fitness - Bloomington", "address": "7901 Southtown Center, Bloomington, MN 55431", "lat": 44.8589, "lng": -93.3078, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+    {"name": "LA Fitness - Brooklyn Center", "address": "5929 Earle Brown Dr, Brooklyn Center, MN 55430", "lat": 45.0665, "lng": -93.3305, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "basketball", "classes"]},
+
+    # --- Crunch Fitness ---
+    {"name": "Crunch Fitness - Roseville", "address": "2480 Fairview Ave N, Roseville, MN 55113", "lat": 45.0141, "lng": -93.1684, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "classes", "tanning"]},
+
+    # --- EoS Fitness ---
+    {"name": "EoS Fitness - Coon Rapids", "address": "12995 Riverdale Dr NW, Coon Rapids, MN 55448", "lat": 45.1612, "lng": -93.3122, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "classes", "tanning"]},
+
+    # --- Flagship Athletic Club ---
+    {"name": "Flagship Athletic Club - Eden Prairie", "address": "755 Prairie Center Dr, Eden Prairie, MN 55344", "lat": 44.8543, "lng": -93.4596, "gym_type": "gym",
+     "amenities": ["weights", "cardio", "pool", "classes", "childcare"]},
+
+    # ======================================================
+    # MINNESOTA BASKETBALL COURTS
+    # ======================================================
+
+    # --- Minneapolis Parks ---
+    {"name": "Peavey Park", "address": "730 E 22nd St, Minneapolis, MN 55404", "lat": 44.9587, "lng": -93.2588, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+    {"name": "The Commons", "address": "425 Portland Ave S, Minneapolis, MN 55415", "lat": 44.9748, "lng": -93.2617, "gym_type": "basketball_court",
+     "amenities": ["outdoor court", "downtown"]},
+    {"name": "Elliot Park", "address": "1000 E 14th St, Minneapolis, MN 55404", "lat": 44.9663, "lng": -93.2587, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+    {"name": "Powderhorn Park", "address": "3400 15th Ave S, Minneapolis, MN 55407", "lat": 44.9370, "lng": -93.2599, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "lake nearby"]},
+    {"name": "North Commons Park", "address": "1801 James Ave N, Minneapolis, MN 55411", "lat": 44.9983, "lng": -93.2980, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "indoor gym", "lights", "pool nearby"]},
+    {"name": "Rev. Dr. Martin Luther King Jr. Park", "address": "4055 Nicollet Ave S, Minneapolis, MN 55409", "lat": 44.9240, "lng": -93.2782, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "community center"]},
+    {"name": "Matthews Park", "address": "2318 29th Ave S, Minneapolis, MN 55406", "lat": 44.9507, "lng": -93.2316, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "rec center"]},
+    {"name": "Harrison Park", "address": "503 Irving Ave N, Minneapolis, MN 55405", "lat": 44.9817, "lng": -93.2947, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+    {"name": "Loring Park", "address": "1382 Willow St, Minneapolis, MN 55403", "lat": 44.9692, "lng": -93.2828, "gym_type": "basketball_court",
+     "amenities": ["outdoor court", "downtown", "lake nearby"]},
+    {"name": "Folwell Park", "address": "1615 Dowling Ave N, Minneapolis, MN 55412", "lat": 45.0219, "lng": -93.2969, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "rec center", "playground"]},
+    {"name": "Bottineau Park", "address": "2000 NE 2nd St, Minneapolis, MN 55418", "lat": 44.9978, "lng": -93.2466, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "rec center"]},
+    {"name": "Van Cleve Park", "address": "901 15th Ave SE, Minneapolis, MN 55414", "lat": 44.9801, "lng": -93.2299, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "near U of M"]},
+    {"name": "Whittier Park", "address": "425 W 26th St, Minneapolis, MN 55405", "lat": 44.9560, "lng": -93.2843, "gym_type": "basketball_court",
+     "amenities": ["outdoor court", "playground"]},
+    {"name": "Hiawatha Park", "address": "4305 E 43rd St, Minneapolis, MN 55406", "lat": 44.9219, "lng": -93.2211, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+
+    # --- St. Paul Parks ---
+    {"name": "Como Park", "address": "1360 Lexington Pkwy N, St. Paul, MN 55103", "lat": 44.9791, "lng": -93.1483, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lake nearby", "playground"]},
+    {"name": "Mears Park", "address": "221 E 5th St, St. Paul, MN 55101", "lat": 44.9488, "lng": -93.0856, "gym_type": "basketball_court",
+     "amenities": ["outdoor court", "downtown"]},
+    {"name": "MLK Park", "address": "270 N Kent St, St. Paul, MN 55102", "lat": 44.9502, "lng": -93.1173, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+    {"name": "Phalen Park", "address": "1600 Phalen Dr, St. Paul, MN 55106", "lat": 44.9852, "lng": -93.0372, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lake nearby", "playground"]},
+    {"name": "Dunning Park", "address": "1221 Dunning Field, St. Paul, MN 55117", "lat": 44.9916, "lng": -93.1136, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "rec center"]},
+    {"name": "Central Village Park", "address": "433 N Western Ave, St. Paul, MN 55103", "lat": 44.9622, "lng": -93.1297, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "playground"]},
+
+    # --- Suburban Courts ---
+    {"name": "Bloomington Athletic Center Courts", "address": "4600 W 98th St, Bloomington, MN 55437", "lat": 44.8394, "lng": -93.3351, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights"]},
+    {"name": "Plymouth Creek Center Courts", "address": "14800 34th Ave N, Plymouth, MN 55447", "lat": 45.0418, "lng": -93.4726, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "playground"]},
+    {"name": "Valley Park - Apple Valley", "address": "14600 Hayes Rd, Apple Valley, MN 55124", "lat": 44.7329, "lng": -93.2361, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "lights", "playground"]},
+    {"name": "Central Park - Eagan", "address": "1501 Central Pkwy, Eagan, MN 55121", "lat": 44.8140, "lng": -93.1638, "gym_type": "basketball_court",
+     "amenities": ["outdoor courts", "playground"]},
 ]
 
 
@@ -233,7 +381,7 @@ async def seed():
         {"email": "demo@gympulse.com"},
         {"$set": {"saved_gyms": gym_ids[:5]}},
     )
-    print(f"Created {len(gym_ids)} real gyms and courts.")
+    print(f"Created {len(gym_ids)} real Minnesota gyms and courts.")
 
     # --- Popular Times for every gym ---
     for i, gid in enumerate(gym_ids):

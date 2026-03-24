@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-logo">Gym<span>Pulse</span></div>
+        <div className="auth-logo">GymPulse</div>
         <p className="auth-subtitle">Sign in to continue</p>
 
         {error && <div className="error-state mb-md">{error}</div>}

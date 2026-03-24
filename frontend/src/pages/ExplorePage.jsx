@@ -12,15 +12,8 @@ const CITIES = [
 
 function StarRating({ rating }) {
   if (!rating) return null
-  const full = Math.floor(rating)
-  const half = rating - full >= 0.5
-  const stars = []
-  for (let i = 0; i < full; i++) stars.push('\u2605')
-  if (half) stars.push('\u00BD')
   return (
-    <span style={{ color: '#f5a623', fontSize: '0.85rem' }}>
-      {stars.join('')} <span className="text-xs text-3">{rating.toFixed(1)}</span>
-    </span>
+    <span className="text-sm text-1">{rating.toFixed(1)} stars</span>
   )
 }
 
@@ -108,47 +101,40 @@ export default function ExplorePage() {
     <div className="page">
       <div className="mb-lg">
         <h1 className="page-title">Explore Gyms</h1>
-        <p className="page-subtitle">Search for any gym across the United States</p>
+        <p className="page-subtitle">Search for gyms across the US</p>
       </div>
 
-      {/* Quick city selection */}
-      <div className="card mb-lg">
-        <div className="card-title" style={{ marginBottom: '0.75rem' }}>Quick Search by City</div>
-        <div className="flex gap-sm flex-wrap">
+      {/* City links - inline, casual */}
+      <div className="mb-lg">
+        <div className="text-xs text-2 mb-xs">Quick search</div>
+        <div className="flex gap-sm flex-wrap" style={{ alignItems: 'center' }}>
           {CITIES.map((city) => (
             <button
               key={city.name}
               className="btn btn-ghost btn-sm"
-              style={{
-                border: '1px solid var(--border)',
-                borderRadius: '100px',
-                padding: '0.35rem 1rem',
-                fontSize: '0.8rem',
-              }}
               onClick={() => handleCityClick(city)}
             >
               {city.name}
             </button>
           ))}
           <button
-            className="btn btn-primary btn-sm"
-            style={{ borderRadius: '100px', padding: '0.35rem 1rem', fontSize: '0.8rem' }}
+            className="btn btn-soft btn-sm"
             onClick={handleUseMyLocation}
           >
-            Use My Location
+            My location
           </button>
         </div>
       </div>
 
       {/* Custom search form */}
       <form onSubmit={handleSearch} className="card mb-lg">
-        <div className="card-title" style={{ marginBottom: '0.75rem' }}>Custom Search</div>
+        <div className="card-title">Custom search</div>
         <div className="grid grid-3 gap-sm" style={{ alignItems: 'end' }}>
           <div className="form-group" style={{ margin: 0 }}>
-            <label>Search Query</label>
+            <label>Search query</label>
             <input
               className="form-input"
-              placeholder='e.g. "CrossFit", "Planet Fitness", "yoga studio"'
+              placeholder='CrossFit, Planet Fitness, yoga...'
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -179,7 +165,7 @@ export default function ExplorePage() {
           </div>
         </div>
         <div className="flex gap-sm mt-md" style={{ alignItems: 'center' }}>
-          <div className="form-group" style={{ margin: 0, maxWidth: '200px' }}>
+          <div className="form-group" style={{ margin: 0, maxWidth: '180px' }}>
             <label>Radius</label>
             <select
               className="form-input"
@@ -202,30 +188,22 @@ export default function ExplorePage() {
 
       {/* Status messages */}
       {source === 'database' && (
-        <div className="card mb-lg" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
-          <p className="text-xs text-3" style={{ margin: 0 }}>
-            Google Places API key is not configured. Showing gyms from the GymPulse database instead.
-            Ask your admin to add a GOOGLE_PLACES_API_KEY to enable full US gym search.
-          </p>
-        </div>
-      )}
-
-      {locationLabel && !loading && !error && (
-        <p className="text-xs text-3 mb-sm">
-          Showing results near <strong>{locationLabel}</strong>
-          {results.length > 0 && <> &mdash; {results.length} gym{results.length !== 1 ? 's' : ''} found</>}
+        <p className="text-xs text-3 mb-md">
+          Google Places API not configured. Showing results from database.
         </p>
       )}
 
-      {/* Loading / Error states */}
-      {loading && <LoadingSpinner />}
-      {error && (
-        <div className="card mb-lg" style={{ borderLeft: '3px solid var(--danger)' }}>
-          <p style={{ margin: 0, color: 'var(--danger)' }}>{error}</p>
-        </div>
+      {locationLabel && !loading && !error && (
+        <p className="text-xs text-2 mb-sm">
+          Results near <strong>{locationLabel}</strong>
+          {results.length > 0 && <> &mdash; {results.length} found</>}
+        </p>
       )}
 
-      {/* Results grid */}
+      {loading && <LoadingSpinner />}
+      {error && <div className="error-state mb-md">{error}</div>}
+
+      {/* Results */}
       {!loading && results.length > 0 && (
         <div className="grid grid-2">
           {results.map((place, idx) => {
@@ -235,24 +213,15 @@ export default function ExplorePage() {
             return (
               <div key={key} className="card">
                 <div className="flex-between mb-xs">
-                  <span className="font-semibold" style={{ fontSize: '0.95rem' }}>{place.name}</span>
-                  <div className="flex gap-xs">
-                    {place.is_open === true && (
-                      <span className="badge badge-green">Open</span>
-                    )}
-                    {place.is_open === false && (
-                      <span className="badge badge-red">Closed</span>
-                    )}
-                    {place.source === 'google' && (
-                      <span className="badge badge-blue">Google</span>
-                    )}
-                  </div>
+                  <span className="font-semibold" style={{ fontSize: '0.92rem' }}>{place.name}</span>
+                  {place.is_open === true && <span className="text-xs text-green">Open</span>}
+                  {place.is_open === false && <span className="text-xs text-red">Closed</span>}
                 </div>
-                <div className="text-xs text-3 mb-sm">{place.address || 'No address'}</div>
+                {place.address && <div className="text-xs text-3 mb-sm">{place.address}</div>}
                 <div className="flex-between mb-sm">
                   <StarRating rating={place.rating} />
-                  {place.rating_count && (
-                    <span className="text-xs text-3">({place.rating_count} reviews)</span>
+                  {place.rating_count > 0 && (
+                    <span className="text-xs text-3">{place.rating_count} reviews</span>
                   )}
                 </div>
                 {place.google_place_id && (
@@ -262,7 +231,7 @@ export default function ExplorePage() {
                     disabled={isImporting || isImported}
                     onClick={() => handleImport(place)}
                   >
-                    {isImported ? 'Added to GymPulse' : isImporting ? 'Adding...' : 'Add to GymPulse'}
+                    {isImported ? 'Added' : isImporting ? 'Adding...' : 'Add to GymPulse'}
                   </button>
                 )}
               </div>
@@ -271,11 +240,10 @@ export default function ExplorePage() {
         </div>
       )}
 
-      {/* Empty state */}
       {!loading && !error && results.length === 0 && locationLabel && (
-        <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-3)' }}>
-          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>No gyms found</p>
-          <p className="text-xs">Try a different search query or increase the radius.</p>
+        <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-3)' }}>
+          <p style={{ fontSize: '0.95rem', marginBottom: '0.4rem' }}>No gyms found</p>
+          <p className="text-xs">Try a different query or increase the radius.</p>
         </div>
       )}
     </div>

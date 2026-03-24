@@ -1,175 +1,93 @@
-# FitTrack - Fitness Tracking MVP
+# GymPulse
 
-Full-stack fitness application with workout tracking, wearable device integration, gym crowd meter, and basketball court finder.
+Track workouts, check gym crowds, and find pickup basketball — all in one place.
 
-## Features
+Built with React + FastAPI + MongoDB. Deployed on Vercel (frontend) and Render (backend).
 
-- **Workout Tracking** — Log exercises with sets, reps, weight, duration. Filter by type, muscle group, date.
-- **Wearable Integration** — Modular support for Fitbit, Apple Health, Samsung Health. Steps, heart rate, calories, sleep.
-- **Gym Busy Meter** — Crowdsourced crowd reports with time-weighted decay. 5-level scale (Empty → Packed).
-- **Basketball Courts** — Find pickup games. Report player counts, upload photos.
-- **Dashboard** — Combined view of today's workouts, wearable stats, gym crowds, basketball reports.
+**Live:** https://frontend-brown-two-55.vercel.app
+**API:** https://gympulse-vrna.onrender.com/docs
 
-## Tech Stack
+## What it does
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, Vite, React Router, Recharts |
-| Backend | Python, FastAPI, Pydantic |
-| Database | MongoDB (Motor async driver) |
-| Auth | JWT (access + refresh tokens), bcrypt |
-| File Storage | Local filesystem (swappable to S3) |
+- Log workouts with exercises, sets, reps, weight
+- See how busy a gym is right now (crowdsourced reports with time-decay weighting)
+- Popular times charts for each gym (like Google Maps)
+- Find basketball courts and see who's playing
+- Search any gym in the US via Google Places
+- Sync wearable data (Fitbit OAuth, Apple Health, Samsung Health)
 
-## Prerequisites
+## Running locally
 
-- **Python 3.11+**
-- **Node.js 18+**
-- **MongoDB** running on `localhost:27017`
-
-## Quick Start
-
-### 1. Clone and set up environment
+You need Python 3.11+, Node 18+, and MongoDB.
 
 ```bash
-cd fitness-app
-cp .env.example backend/.env
-```
-
-### 2. Backend
-
-```bash
+# backend
 cd backend
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-# macOS/Linux
-source venv/bin/activate
-
+python -m venv venv && venv\Scripts\activate  # or source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 3. Seed the database
-
-```bash
-python seed.py
-```
-
-This creates sample users, workouts, gyms, and crowd reports.
-
-**Demo account:** `demo@fittrack.com` / `password123`
-
-### 4. Start the backend
-
-```bash
+python seed.py                                # creates demo data
 uvicorn app.main:app --reload --port 8000
-```
 
-API docs available at: http://localhost:8000/docs
-
-### 5. Frontend
-
-```bash
+# frontend (new terminal)
 cd frontend
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173
+Demo login: `demo@gympulse.com` / `password123`
 
-## Project Structure
+## Stack
+
+- **Frontend:** React 18, Vite, React Router, Recharts, Axios
+- **Backend:** FastAPI, Motor (async MongoDB), Pydantic
+- **Auth:** JWT access/refresh tokens, bcrypt
+- **Database:** MongoDB with geospatial indexes
+- **Deployment:** Vercel (static) + Render (Docker) + MongoDB Atlas
+
+## Project layout
 
 ```
-fitness-app/
-├── backend/
-│   ├── app/
-│   │   ├── main.py              # FastAPI app entry point
-│   │   ├── config.py            # Settings / env vars
-│   │   ├── database.py          # MongoDB connection
-│   │   ├── auth/jwt.py          # JWT + password auth
-│   │   ├── models/              # Pydantic schemas
-│   │   │   ├── user.py
-│   │   │   ├── workout.py
-│   │   │   ├── wearable.py
-│   │   │   └── gym.py
-│   │   ├── routes/              # API endpoints
-│   │   │   ├── auth.py
-│   │   │   ├── workouts.py
-│   │   │   ├── wearables.py
-│   │   │   ├── gyms.py
-│   │   │   ├── basketball.py
-│   │   │   ├── dashboard.py
-│   │   │   └── uploads.py
-│   │   ├── services/wearables/  # Modular wearable providers
-│   │   │   ├── base.py          # Abstract interface
-│   │   │   ├── fitbit.py
-│   │   │   ├── apple_health.py
-│   │   │   ├── samsung_health.py
-│   │   │   └── registry.py      # Provider registry
-│   │   └── utils/helpers.py     # Time decay, serialization
-│   ├── seed.py                  # Database seeder
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx              # Routing
-│   │   ├── context/AuthContext   # Auth state management
-│   │   ├── services/api.js      # API client
-│   │   ├── components/          # Reusable components
-│   │   └── pages/               # Page views
-│   ├── package.json
-│   └── vite.config.js
-├── .env.example
-└── README.md
+backend/
+  app/
+    main.py           # FastAPI app, CORS, route registration
+    config.py         # env-based settings (pydantic-settings)
+    database.py       # MongoDB connection + index creation
+    auth/jwt.py       # password hashing, token create/verify
+    models/           # pydantic schemas (user, workout, gym, wearable)
+    routes/           # API endpoints
+    services/         # Google Places client, wearable providers
+    utils/helpers.py  # time decay math, serialization
+  seed.py             # populates DB with sample data
+  Dockerfile
+
+frontend/
+  src/
+    pages/            # Dashboard, Gyms, Workouts, Basketball, Explore, etc.
+    components/       # Layout, PopularTimes, BusyLevelBadge, etc.
+    services/api.js   # axios client with JWT interceptors
+    context/          # auth state
 ```
 
-## API Endpoints
+## Environment variables
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Create account |
-| POST | `/api/auth/login` | Sign in |
-| GET | `/api/auth/me` | Current user profile |
-| GET/POST | `/api/workouts/` | List/create workouts |
-| GET/PUT/DELETE | `/api/workouts/{id}` | Single workout CRUD |
-| GET | `/api/workouts/stats/summary` | Workout statistics |
-| POST | `/api/wearables/sync` | Submit wearable data |
-| POST | `/api/wearables/sync/batch` | Bulk import |
-| GET | `/api/wearables/daily-summary` | Daily aggregated stats |
-| GET/POST | `/api/gyms/` | List/create gyms |
-| POST | `/api/gyms/{id}/crowd-reports` | Submit crowd report |
-| GET | `/api/gyms/{id}/crowd-reports` | Get crowd reports |
-| POST | `/api/basketball/reports` | Submit basketball report (with photo) |
-| GET | `/api/basketball/reports/{gym_id}` | Get basketball reports |
-| GET | `/api/basketball/courts` | List basketball courts |
-| GET | `/api/dashboard/summary` | Combined dashboard data |
-| POST | `/api/uploads/` | Upload a file |
+Copy `.env.example` to `backend/.env` and fill in:
 
-## Key Design Decisions
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `MONGODB_URL` | yes | MongoDB connection string |
+| `JWT_SECRET_KEY` | yes | random string for signing tokens |
+| `CORS_ORIGINS` | yes | comma-separated allowed origins |
+| `GOOGLE_PLACES_API_KEY` | no | enables gym search via Google |
+| `FITBIT_CLIENT_ID` | no | for Fitbit OAuth |
+| `FITBIT_CLIENT_SECRET` | no | for Fitbit OAuth |
 
-**Crowd report decay:** Reports are weighted using exponential decay with a 30-minute half-life. A report from 30 minutes ago counts half as much as a fresh one. This prevents stale data from skewing results.
+## How crowd reports work
 
-**Wearable strategy pattern:** Each provider implements `WearableProvider` (base.py). New providers register in `registry.py` and become available automatically — no route changes needed.
+Each gym has a busyness score from 1 (empty) to 5 (packed). Reports are weighted with exponential decay — a 30-minute half-life means older reports matter less. If no users have reported, the app falls back to estimated patterns based on typical gym traffic.
 
-**MongoDB:** Chosen for flexible schemas — workouts can have varying exercise structures, wearable data varies by provider, and crowd reports are naturally document-shaped.
+## Limitations
 
-## Known Limitations
-
-- Wearable OAuth flows are placeholder implementations (Fitbit is most complete)
-- Apple Health requires a native iOS app for HealthKit access
-- No real-time updates — crowd reports refresh on page load
-- Photo uploads stored locally (not suitable for multi-server deployment)
-- No email verification or password reset
-- No rate limiting on crowd report submissions
-
-## Future Improvements
-
-- WebSocket for real-time crowd updates
-- S3/CloudFront for file storage
-- Push notifications for gym crowd alerts
-- Social features (friends, shared workouts)
-- Workout templates and programs
-- Exercise auto-complete with muscle group detection
-- Geolocation for nearby gym discovery
-- PWA support for mobile install
-- Rate limiting and abuse prevention
-- Admin dashboard for gym management
+- Wearable OAuth is only fully implemented for Fitbit (Apple/Samsung are webhook receivers)
+- Free tier Render spins down after 15min idle (~30s cold start)
+- No real-time updates yet (reports refresh on page load)
+- Photo uploads use local storage (not persistent on Render free tier)

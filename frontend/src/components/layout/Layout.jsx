@@ -25,7 +25,7 @@ export default function Layout() {
     <div className="layout">
       <aside className="sidebar">
         <div className="sidebar-header">
-          <div className="logo">Gym<span>Pulse</span></div>
+          <div className="logo">GymPulse</div>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (

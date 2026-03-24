@@ -66,10 +66,10 @@ export default function GymDetailPage() {
           <h1 className="page-title">{gym.name}</h1>
           <p className="text-sm text-2">{gym.address || 'No address'}</p>
           <div className="flex gap-xs mt-xs" style={{ alignItems: 'center' }}>
-            <span className="badge badge-blue">{gym.gym_type}</span>
+            <span className="text-xs text-2">{gym.gym_type}</span>
             {gym.google_rating && (
-              <span className="text-xs text-2" style={{ marginLeft: 8 }}>
-                &#9733; {gym.google_rating} ({gym.google_rating_count} reviews)
+              <span className="text-xs text-2" style={{ marginLeft: 6 }}>
+                {gym.google_rating} stars ({gym.google_rating_count} reviews)
               </span>
             )}
           </div>
@@ -78,18 +78,20 @@ export default function GymDetailPage() {
       </div>
 
       {/* Current level */}
-      <div className="card mb-md" style={{ textAlign: 'center', padding: 28 }}>
-        <div className="text-xs text-2 mb-xs" style={{ textTransform: 'uppercase', letterSpacing: '.06em' }}>Current Crowd Level</div>
+      <div className="card mb-md" style={{ padding: '20px' }}>
+        <div className="text-xs text-2 mb-xs">Current crowd level</div>
         {gym.current_busy_level ? (
-          <>
-            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1.2 }}>{gym.current_busy_level}</div>
-            <div className="mt-xs"><BusyLevelBadge level={gym.current_busy_level} label={gym.busy_level_label} /></div>
-            <div className="text-xs text-3 mt-xs">
-              {gym.data_source === 'google' ? 'Based on Google data' : `Based on ${gym.recent_reports_count} recent reports`}
+          <div className="flex gap-sm" style={{ alignItems: 'center' }}>
+            <span style={{ fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }}>{gym.current_busy_level}</span>
+            <div>
+              <BusyLevelBadge level={gym.current_busy_level} label={gym.busy_level_label} />
+              <div className="text-xs text-3 mt-xs">
+                {gym.data_source === 'google' ? 'Based on Google data' : `${gym.recent_reports_count} recent reports`}
+              </div>
             </div>
-          </>
+          </div>
         ) : (
-          <div className="text-2 mt-sm">No reports yet</div>
+          <div className="text-2">No reports yet</div>
         )}
       </div>
 
@@ -106,7 +108,7 @@ export default function GymDetailPage() {
             <button
               key={o.value}
               className={`btn btn-sm ${selectedLevel === o.value ? '' : 'btn-ghost'}`}
-              style={selectedLevel === o.value ? { background: o.color, color: '#0b0e14', borderColor: o.color } : {}}
+              style={selectedLevel === o.value ? { background: o.color, color: '#12151c', borderColor: o.color } : {}}
               onClick={() => setSelectedLevel(o.value)}
             >{o.label}</button>
           ))}
@@ -118,11 +120,11 @@ export default function GymDetailPage() {
 
       {/* Reports */}
       <div className="card mb-md">
-        <div className="card-title">Recent Reports</div>
+        <div className="card-title">Recent reports</div>
         {reports.length === 0 ? (
           <p className="text-2 text-sm">No reports in the last few hours</p>
         ) : reports.map((r) => (
-          <div key={r.id} className="flex-between" style={{ padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+          <div key={r.id} className="flex-between" style={{ padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
             <div className="flex gap-sm" style={{ alignItems: 'center' }}>
               <BusyLevelBadge level={r.busy_level} label={r.busy_level_label} />
               <span className="text-sm text-1">{r.user_display_name}</span>
@@ -136,7 +138,7 @@ export default function GymDetailPage() {
         <div className="card">
           <div className="card-title">Amenities</div>
           <div className="flex gap-xs flex-wrap">
-            {gym.amenities.map((a) => <span key={a} className="badge badge-blue">{a}</span>)}
+            {gym.amenities.map((a) => <span key={a} className="text-xs text-2" style={{ background: 'var(--bg-2)', padding: '3px 8px', borderRadius: 4 }}>{a}</span>)}
           </div>
         </div>
       )}
