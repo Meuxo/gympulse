@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from bson import ObjectId
 from app.database import get_db
 from app.auth.jwt import get_current_user
-from app.utils.helpers import serialize_doc, serialize_docs, weighted_average_busy_level
+from app.utils.helpers import serialize_doc, serialize_docs, average_busy_level
 from app.models.gym import BUSY_LEVEL_LABELS
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
@@ -66,7 +66,7 @@ async def dashboard_summary(current_user: dict = Depends(get_current_user)):
             "timestamp": {"$gte": cutoff},
         }).to_list(50)
 
-        busy_level = weighted_average_busy_level(reports)
+        busy_level = average_busy_level(reports)
         gym_info = {
             "gym_id": gym_id,
             "name": gym["name"],
