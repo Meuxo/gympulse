@@ -1,41 +1,17 @@
 from datetime import datetime
-import math
 
 
-def time_decay_weight(timestamp: datetime, half_life_minutes: int = 30) -> float:
+def average_busy_level(reports: list[dict]) -> float | None:
     """
-    Calculate a time-decay weight for a crowd report.
-    Uses exponential decay with a configurable half-life.
-    Reports older than the half-life are weighted less.
-    """
-    now = datetime.utcnow()
-    age_minutes = (now - timestamp).total_seconds() / 60
-    if age_minutes < 0:
-        age_minutes = 0
-    return math.pow(0.5, age_minutes / half_life_minutes)
-
-
-def weighted_average_busy_level(reports: list[dict], half_life_minutes: int = 30) -> float | None:
-    """
-    Calculate time-weighted average busy level from a list of crowd reports.
-    Each report should have 'busy_level' (int) and 'timestamp' (datetime).
+    Calculate simple average busy level from a list of crowd reports.
+    Each report should have 'busy_level' (int).
     Returns None if no reports.
     """
     if not reports:
         return None
 
-    total_weight = 0.0
-    weighted_sum = 0.0
-
-    for report in reports:
-        weight = time_decay_weight(report["timestamp"], half_life_minutes)
-        weighted_sum += report["busy_level"] * weight
-        total_weight += weight
-
-    if total_weight == 0:
-        return None
-
-    return round(weighted_sum / total_weight, 1)
+    total = sum(r["busy_level"] for r in reports)
+    return round(total / len(reports), 1)
 
 
 def serialize_doc(doc: dict) -> dict:

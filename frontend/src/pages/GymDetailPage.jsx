@@ -86,7 +86,7 @@ export default function GymDetailPage() {
             <div>
               <BusyLevelBadge level={gym.current_busy_level} label={gym.busy_level_label} />
               <div className="text-xs text-3 mt-xs">
-                {gym.data_source === 'google' ? 'Based on Google data' : `${gym.recent_reports_count} recent reports`}
+                {gym.data_source === 'schedule' ? 'Based on weekly pattern' : gym.data_source === 'recent_reports' ? `${gym.recent_reports_count} recent reports` : 'Estimated'}
               </div>
             </div>
           </div>

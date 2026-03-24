@@ -62,6 +62,7 @@ export const gymAPI = {
   getCrowdReports: (gymId, params) => api.get(`/gyms/${gymId}/crowd-reports`, { params }),
   getPopularTimes: (gymId) => api.get(`/gyms/${gymId}/popular-times`),
   searchNearby: (params) => api.get('/gyms/search/nearby', { params }),
+  searchByCity: (params) => api.get('/gyms/search/nearby', { params }),
   importGoogle: (data) => api.post('/gyms/import-google', data),
 }
 

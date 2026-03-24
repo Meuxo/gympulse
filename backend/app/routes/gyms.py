@@ -10,51 +10,63 @@ from app.models.gym import (
     BusyLevel, BUSY_LEVEL_LABELS,
     PopularTimesResponse, PopularTimesDay, HourlyBusyness,
 )
-from app.utils.helpers import serialize_doc, serialize_docs, weighted_average_busy_level
+from app.utils.helpers import serialize_doc, serialize_docs, average_busy_level
 from app.services.google_places import (
     search_place, get_place_busyness, fetch_google_popular_times, link_gym_to_google,
 )
 
 router = APIRouter(prefix="/gyms", tags=["Gyms"])
 
-REPORT_WINDOW_HOURS = 2
 DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 
 async def _enrich_gym(gym_doc: dict) -> dict:
-    """Add current busy level info to a gym document. Falls back to Google data."""
+    """Add current busy level based on historical reports for this day/hour."""
     db = get_db()
     gym = serialize_doc(gym_doc)
-    cutoff = datetime.utcnow() - timedelta(hours=REPORT_WINDOW_HOURS)
-    reports = await db.crowd_reports.find({
-        "gym_id": str(gym_doc.get("_id", gym_doc.get("id"))),
+    gym_id = str(gym_doc.get("_id", gym_doc.get("id")))
+    now = datetime.utcnow()
+
+    # Use the pre-computed popular times for the current day/hour
+    popular_times = await db.popular_times.find_one({"gym_id": gym_id})
+    busy_level = None
+    data_source = None
+
+    if popular_times and popular_times.get("days"):
+        current_day = now.weekday()
+        current_hour = now.hour
+        for day in popular_times["days"]:
+            if day["day_of_week"] == current_day:
+                for h in day["hours"]:
+                    if h["hour"] == current_hour:
+                        level = h["level"]
+                        if level and level > 0:
+                            busy_level = level
+                            data_source = "schedule"
+                        break
+                break
+
+    # Also check for very recent reports (last 4 hours) to overlay real-time data
+    cutoff = now - timedelta(hours=4)
+    recent_reports = await db.crowd_reports.find({
+        "gym_id": gym_id,
         "timestamp": {"$gte": cutoff},
     }).to_list(50)
 
-    busy_level = weighted_average_busy_level(reports)
+    if recent_reports:
+        busy_level = average_busy_level(recent_reports)
+        data_source = "recent_reports"
+
     gym["current_busy_level"] = busy_level
-    gym["data_source"] = "user_reports" if busy_level is not None else None
+    gym["data_source"] = data_source
 
     if busy_level is not None:
         rounded = round(busy_level)
         gym["busy_level_label"] = BUSY_LEVEL_LABELS.get(rounded, "Unknown")
     else:
-        # Fallback: check if gym has a Google place_id and try Google
-        place_id = gym_doc.get("google_place_id")
-        if place_id:
-            google_data = await get_place_busyness(place_id)
-            if google_data and google_data.get("is_open") is not None:
-                # Estimate busyness: if open → 3 (moderate), if closed → 0
-                estimated = 3 if google_data["is_open"] else 0
-                gym["current_busy_level"] = estimated
-                gym["busy_level_label"] = BUSY_LEVEL_LABELS.get(estimated, "Unknown") if estimated > 0 else "Closed"
-                gym["data_source"] = "google"
-            else:
-                gym["busy_level_label"] = None
-        else:
-            gym["busy_level_label"] = None
+        gym["busy_level_label"] = None
 
-    gym["recent_reports_count"] = len(reports)
+    gym["recent_reports_count"] = len(recent_reports)
     gym["google_place_id"] = gym_doc.get("google_place_id")
     gym["google_rating"] = gym_doc.get("google_rating")
     gym["google_rating_count"] = gym_doc.get("google_rating_count")
@@ -63,79 +75,49 @@ async def _enrich_gym(gym_doc: dict) -> dict:
 
 @router.get("/search/nearby")
 async def search_nearby_gyms(
-    q: str = Query("gym", description="Search query"),
-    lat: float = Query(..., description="Latitude"),
-    lng: float = Query(..., description="Longitude"),
-    radius: int = Query(5000, ge=500, le=50000, description="Radius in meters"),
+    q: str = Query("", description="Search query (name filter)"),
+    city: str = Query("", description="City name to search in"),
+    lat: Optional[float] = Query(None, description="Latitude"),
+    lng: Optional[float] = Query(None, description="Longitude"),
+    radius: float = Query(10, ge=1, le=100, description="Radius in miles"),
+    gym_type: Optional[str] = Query(None, description="Filter by gym type"),
 ):
-    """Search for gyms near a location using Google Places API."""
-    from app.config import get_settings
-    settings = get_settings()
+    """Search for gyms by city name or coordinates. Radius is in miles."""
+    db = get_db()
+    radius_meters = radius * 1609.34  # miles to meters
 
-    if not settings.GOOGLE_PLACES_API_KEY:
-        # Fallback: return gyms from our database sorted by proximity
-        db = get_db()
-        query = {
-            "location": {
-                "$near": {
-                    "$geometry": {"type": "Point", "coordinates": [lng, lat]},
-                    "$maxDistance": radius,
-                }
+    query = {}
+
+    # City-based search: match against address field
+    if city:
+        query["address"] = {"$regex": city, "$options": "i"}
+
+    # Name filter
+    if q:
+        query["name"] = {"$regex": q, "$options": "i"}
+
+    # Type filter
+    if gym_type:
+        query["gym_type"] = gym_type
+
+    # If coordinates provided, use geospatial query
+    if lat is not None and lng is not None:
+        query["location"] = {
+            "$near": {
+                "$geometry": {"type": "Point", "coordinates": [lng, lat]},
+                "$maxDistance": radius_meters,
             }
         }
-        try:
-            gyms = await db.gyms.find(query).limit(20).to_list(20)
-            return {"results": [await _enrich_gym(g) for g in gyms], "source": "database"}
-        except Exception:
-            gyms = await db.gyms.find().limit(20).to_list(20)
-            return {"results": [await _enrich_gym(g) for g in gyms], "source": "database"}
-
-    # Use Google Places Text Search
-    import httpx
-    headers = {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": settings.GOOGLE_PLACES_API_KEY,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.currentOpeningHours,places.businessStatus,places.types",
-    }
-    body = {
-        "textQuery": q,
-        "maxResultCount": 20,
-        "locationBias": {
-            "circle": {
-                "center": {"latitude": lat, "longitude": lng},
-                "radius": float(radius),
-            }
-        },
-    }
 
     try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            resp = await client.post(
-                "https://places.googleapis.com/v1/places:searchText",
-                json=body, headers=headers,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Google Places API error: {str(e)}")
+        gyms = await db.gyms.find(query).limit(50).to_list(50)
+    except Exception:
+        # Geospatial index may not exist, fall back to non-geo query
+        query.pop("location", None)
+        gyms = await db.gyms.find(query).limit(50).to_list(50)
 
-    results = []
-    for p in data.get("places", []):
-        results.append({
-            "google_place_id": p.get("id"),
-            "name": p.get("displayName", {}).get("text", "Unknown"),
-            "address": p.get("formattedAddress", ""),
-            "lat": p.get("location", {}).get("latitude"),
-            "lng": p.get("location", {}).get("longitude"),
-            "rating": p.get("rating"),
-            "rating_count": p.get("userRatingCount"),
-            "is_open": p.get("currentOpeningHours", {}).get("openNow"),
-            "business_status": p.get("businessStatus"),
-            "types": p.get("types", []),
-            "source": "google",
-        })
-
-    return {"results": results, "source": "google_places", "count": len(results)}
+    enriched = [await _enrich_gym(g) for g in gyms]
+    return {"results": enriched, "source": "database", "count": len(enriched)}
 
 
 @router.post("/import-google")
