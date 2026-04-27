@@ -4,7 +4,7 @@ Track workouts, check gym crowds, and find pickup basketball — all in one plac
 
 Built with React + FastAPI + MongoDB. Deployed on Vercel (frontend) and Render (backend).
 
-**Live:** https://frontend-brown-two-55.vercel.app
+**Live:** [https://frontend-brown-two-55.vercel.app](https://gympulsemn.vercel.app/)
 **API:** https://gympulse-vrna.onrender.com/docs
 
 ## What it does
